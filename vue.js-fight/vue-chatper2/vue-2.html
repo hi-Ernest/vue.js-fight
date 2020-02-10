@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <p v-if="show">展示这段文字</p>
+        <button v-on:click="handleClose">点击隐藏</button>
+        <br>
+        <a v-bind:href="url">链接</a>
+        <br>
+        <img v-bind:href="imgUrl">
+    </div>
+
+    <script>
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                show: true,
+                url: 'http://baidu.com',
+                imgUrl: 'https://itbook.download/img/logo.png'
+            },
+            methods: {
+                handleClose: function() {
+                    // this.show = false
+                    this.close();
+                },
+                close: function() {
+                    this.show = false;
+                }
+            }
+        })
+
+    
+        /**语法糖
+         * v-bind:href -> :href
+         * v-on:click -> @click
+         * 
+         * */
+    
+    </script>
+</body>
+</html>

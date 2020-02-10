@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <title>内置指令</title>
+</head>
+<body>
+    <div id="app">
+        <!-- 适用于条件不经常改变-->
+        <template v-if="type === 'name'">
+            <label>用户名: </label>
+            <input placeholder="请输入用户名" key="name-input">            
+        </template>
+        <template v-else>
+            <label>邮箱: </label>
+            <input placeholder="请输入邮箱" key="mail-input">
+        </template>  
+        <button @click="handleToggleClick">
+            切换类型
+        </button>
+        <br>
+        <!-- display: none-->
+        <!-- 适用于频繁切换条件-->
+        <p v-show="status === 1">当status为1则会显示</p>
+    </div>
+
+
+    <div id="app2">
+        <ul>
+            <template v-for="book in books">
+            <!-- v-for="book in filterBooks "-->
+                <li>
+                    书名: {{ book.name }}
+                </li>
+                <li>
+                    作者: {{ book.author }}
+                </li>
+            </template>
+        </ul>
+        <br>
+    </div>
+
+
+    <div id="app3">
+        点击次数: {{ counter }}
+        <!-- <br>
+        <button @click="handleAdd">+ 1</button>
+        <br>
+        <button @click="handleAdd(10)">+ 10</button> -->
+    </div>
+
+
+    <script>
+        //<input>被复用 -> 不想复用 -> 添加key
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                type: 'name',
+                status: 3
+            },
+            methods: {
+                handleToggleClick: function() {
+                    this.type = this.type === 'name' ? 'mail' : 'name'; 
+                }
+            }
+        })
+
+        var vm2 = new Vue({
+            el: '#app2',
+            data: {
+                books: [
+                    {
+                        name: 'First',
+                        author: 'Ernest'
+                    },
+                    {
+                        name: 'Second',
+                        author: 'Mike'
+                    }
+                ]
+            },
+            computed: {
+                //不需要改变原来数组 -> 计算属性filterBooks依赖于books
+                filterBooks: function() {
+                    return this.books.filter(function(book) {
+                        return book.name.match(/First/);
+                    })
+                },
+                sortBooks: function() {
+                    return this.books.sort(function(a, b) {
+                        return a.name.length < b.name.length;
+                    })
+                }
+            }
+        })
+
+        //添加新的
+        vm2.books.push({
+            name: '动物世界',
+            author: '翻电池'
+        })
+
+        //将没有Second的过滤掉
+        vm2.books = vm2.books.filter(function(item) {
+            return item.name.match(/Second/);
+        });
+
+        //通过索引直接设置项 -> mv2.books[0] = {...}
+        Vue.set(mv2.books, 0, {
+            name: 'CSS的密码',
+            author: '[美]Max'
+        }) 
+
+        //修改数组长度 -> 设置1
+        mv2.books.splice(1)
+
+
+        var vm3 = new Vue({
+            el: '#app3',
+            data: {
+                counter : 0
+            }
+            // methods: {
+            //     handleAdd: function(count) {
+            //         // return this.count += e === 10 ? 10 : 1;
+            //         count = count || 1;
+            //         return this.counter += count;
+            //     }
+            // }
+        })
+        
+    </script>
+</body>
+</html>

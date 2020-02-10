@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <title>v-bind class stype绑定</title>
+</head>
+<body>
+    <div id="app">
+        <div class="static" :class="{ 'active': isActive, 
+        'error': isError}">
+        </div>
+    </div>
+
+    <div id="app2">
+        <div :class="classes"></div>
+    </div>
+
+
+    <div id="app3">
+        <div class="[isActive ? activeCls : '', errorCls]"></div>
+    </div>
+
+    <div id="style">
+        <div :style="styles">文本</div>
+    </div>
+
+
+    <!--
+        isActive == true ? class = static active
+        isError == true ? class = static active error
+    -->
+    <script>
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                isActive: true,
+                isError: false
+            }
+        })
+
+        //避免class过长
+        var vm2 = new Vue({
+            el: '#app2',
+            data: {
+                size: 'large',
+                disabled: true
+            },
+            //使用计算属性给元素动态设置类名 -> 尤其复用组件
+            //如果表达式过长 -> 采用计算属性
+            computed: {
+                classes: function() {
+                    return [
+                        'btn',
+                        {
+                            ['btn-'+ this.size] : this.size != '',
+                            ['btn-disabled'] : this.disabled                        }  
+                    ]
+                }
+            }
+        })
+
+        var vm3 = new Vue({
+            el: '#app3',
+            data: {
+                isActive: true,
+                activeCls: 'active',
+                errorCls: 'error'
+            }
+        })
+        
+
+        var sty = new Vue({
+            el: '#style',
+            data: {
+                styles: {
+                    color: 'red',
+                    fontSize: 90 + 'px'
+                }
+            }
+        })
+
+    </script>
+
+
+
+
+</body>
+</html>
