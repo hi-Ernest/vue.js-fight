@@ -28,10 +28,10 @@
 
     <div id="app2">
         <ul>
-            <template v-for="book in books">
+            <template v-for="(book, index) in books">
             <!-- v-for="book in filterBooks "-->
                 <li>
-                    书名: {{ book.name }}
+                    {{ index + 1}} 书名: {{ book.name }}
                 </li>
                 <li>
                     作者: {{ book.author }}
