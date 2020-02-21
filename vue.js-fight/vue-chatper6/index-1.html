@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <title>表单与v-model</title>
+</head>
+<body>
+    <div id="app">
+        <!-- <input type="text" v-model="message" placeholder="输入..."> -->
+        <input type="text" @input="handleInput" placeholder="输入...">
+        <p>输入的内容是：{{ message }}</p>
+    </div>
+
+    <div id="app2">
+        <input type="radio" v-model="picked" value="html" id="html">
+        <label for="html">HTML</label>
+        <br>
+        <input type="radio" v-model="picked" value="js" id="js">
+        <label for="js">JS</label>
+        <br>
+        <input type="radio" v-model="picked" value="css" id="css">
+        <label for="css">CSS</label>
+        <br>
+    </div>
+    <p>选择的项是: {{ picked }}</p>
+
+
+    <div id="app3">
+        <input type="checkbox" v-model="checked" id="html" value="html">
+        <label for="html">HTMl</label>
+        <br>
+        <input type="checkbox" v-model="checked" id="js" value="js">
+        <label for="js">JS</label>
+        <br>
+        <input type="checkbox" v-model="checked" id="css" value="css">
+        <label for="css">CSS</label>
+        <br>
+    
+        <p>选择状态: {{ checked }}</p>
+    </div>
+
+    <div id="app4">
+        <select v-model="selected" multiple>
+            <option>html</option>
+            <option value="js">javaScript</option>
+            <option>css</option>
+        </select>
+        <p>选择状态: {{ selected }}</p>
+    </div>
+
+    <div id="app5">
+        <input type="radio" v-model="picked" :value = "value">
+        <label>单选按钮</label>
+        <p>{{ picked }}</p>
+        <p>{{ value }}</p>
+    </div>
+
+    <div id="app6">
+        <input type="checkbox" 
+            v-model="toggle"
+            :true-value="value1"
+            :false-value="value2">
+        <label>复选框</label>
+        <p>{{ toggle }}</p>
+        <p>{{ value1 }}</p>
+        <p>{{ value2 }}</p>
+    </div>
+
+    <div id="app7">
+        <!-- 修饰符: .lazy .number .trim -->
+        <input type="text" v-model.number="message">
+        <p>{{ typeof message }}</p>
+        <!-- tell you it's type -->
+    </div>
+
+    <script>
+        var mv7 = new Vue ({
+            el: '#app7',
+            data: {
+                message: 124
+            }
+        })
+
+
+        var mv6 = new Vue ({
+            el: '#app6',
+            data: {
+                toggle: false,
+                value1: 'a',
+                value2: 'b'
+            }
+        })
+
+
+        var mv5 = new Vue ({
+            el: '#app5',
+            data: {
+                picked: false,
+                value: 123
+            }
+        })
+
+        var mv = new Vue({
+            el: '#app',
+            data: {
+                message: ''
+            },
+            methods: {
+                handleInput: function(e) {
+                    this.message = e.target.value;
+                }
+            }
+        })
+
+        var mv2 = new Vue({
+            el: '#app2',
+            data: {
+                picked: 'css'
+            }
+        })
+
+        var mv3 = new Vue({
+            el: '#app3',
+            data: {
+                checked: ['html', 'css']
+            }
+        })
+
+
+        //优先匹配value的值 if 无 -> <option>的text
+        //多选则添加属性 -> multiple
+        var mv4 = new Vue({
+            el: '#app4',
+            data: {
+                selected: ['html', 'js']
+            }
+        })
+    
+    </script>
+</body>
+</html>

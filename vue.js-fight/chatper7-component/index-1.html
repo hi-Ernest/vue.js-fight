@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <title>组件详解</title>
+</head>
+<body>
+    <div id="app">
+        <my-component></my-component>
+        <my-component></my-component>
+        <my-component></my-component>
+
+        
+        <!-- 
+            Vue组件的模版某些条件下会受HTML的限制,如 <table>内只规定<tr> <td> <th>
+            组件使用data -> data必须为函数 并 return数据 
+        -->
+        <table>
+            <tbody is="my-component"></tbody>
+        </table>
+    </div>
+
+
+<script>
+    // 组件复用
+    var data = {
+        counter: 0
+    };
+
+    Vue.component('my-component', {
+        // template: '<div>这里是组件的内容</div>'
+        // template: '<div>{{ message }}</div>',
+        template: '<button @click="counter++"> {{ counter }}</button>',
+        data: function() {
+            return {
+                counter: 0
+            };
+            // return {
+            //     message: 'component concent'
+            // }
+        }
+    })
+
+
+    var mv = new Vue({
+        el: '#app',
+    })
+
+</script>
+
+</body>
+</html>

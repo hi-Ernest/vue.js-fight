@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <input type="text" v-model="parentMessage">
+        <!-- 使用 v-bind 动态绑定 props 的值-->
+        <my-component :vd-message="parentMessage"></my-component>
+        <!-- 可以采用驼峰命名 -->
+        <!-- <my-component vd-message="来自父组件的数据"></my-component> -->
+    </div>
+
+    <!-- 单向数据流 -->
+    <div id="app2">
+        <v-comp :init-count="1"></v-comp>
+    </div>
+
+
+    <div id="app3">
+        <p>总数: {{ total }}</p>
+        <custom-component @input="handleGetTotal"></custom-component>
+    </div>
+
+    <script>
+        Vue.component('custom-component', {
+            template: '<button @click="handleClick">+1</button>',
+            data: function() {
+                return {
+                    counter: 0
+                }
+            },
+            methods: {
+                handleClick: function() {
+                    this.counter++;
+                    this.$emit('input', this.counter);
+                }
+            }
+        });
+
+        var vm3 = new Vue({
+            el: "#app3",
+            data: {
+                total: 0
+            },
+            methods: {
+                handleGetTotal: function(total) {
+                    this.total = total;
+                }
+            }
+        })
+
+
+
+
+        // 子父组件间通信
+        // 常用:父组件的模板保护子组件，父组件(传递数据或者参数) -> 子组件(根据参数的不同渲染不同内容或执行操作)
+        // 该正向传递数据过程 -> props声明需要从父级接收的数据，数值分 “字符串数组” or “对象”
+        Vue.component('my-component', {
+            props: ['vdMessage'],
+            template: '<div>{{ vdMessage }}</div>'
+        })
+
+        var mv = new Vue({
+            el: '#app',
+            data: {
+                parentMessage: ''
+            }
+        })
+
+        // 声明数据count 在初始化时获取父组件的initCount 之后就与之无关 只用维护count避免直接操作initCount
+        Vue.component('v-comp', {
+            props: ['initCount'],
+            template: '<div>{{ count }}</div>',
+            data: function() {
+                return {
+                    count: this.initCount
+                }
+            }
+        })
+
+        // 必须加上
+        var mv2 = new Vue({
+            el: '#app2'
+        })
+
+        // 数据验证
+        Vue.component('custom-component', {
+            props: {
+                propA: Number,
+                propB: [String, Number],
+                propC: {
+                    type: Boolean,
+                    default: true
+                },
+                // 数字 并且是必传
+                propD: {
+                    type: Number,
+                    required: true
+                },
+                // 如果是数组或对象，默认值必须是一个函数来返回
+                propE: {
+                    type: Array,
+                    default: function() {
+                        return [];
+                    }
+                },
+                // 自定义一个验证函数
+                propF: {
+                    validator: function(value) {
+                        return value > 10;
+                    }
+                }
+            }
+        })
+
+
+
+    </script>
+
+</body>
+</html>
