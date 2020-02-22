@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <title>非父子组件的通信</title>
+</head>
+<body>
+
+    <!-- 1.使用中央事件总线bus -->
+    <div id="app">
+        {{ message }}
+        <component-a></component-a>
+    </div>
+
+    <!--2.使用父链和子组件索引  
+        递归向上/向下无限访问
+    -->
+    <div id="app2">
+        {{ message2 }}
+        <component-b></component-b>
+    </div>
+
+    <div id="app3">
+        <button @click="handleRef">通过ref获取子组件实例</button>
+        <component-c ref="comA"></component-c>
+    </div>
+
+    <script>
+        // 中间人 -> 中介
+        var bus = new Vue();
+
+        Vue.component('component-a', {
+            template: '<button @click="hanldEvent">传递事件</button>',
+            methods: {
+                hanldEvent: function() {
+                    bus.$emit('on-message', '来自组件component-a的内容')
+                }
+            }
+        });
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                message: ''
+            },
+            mounted: function() {
+                var _this = this;
+                // 在实例化时,监听来自bus实例的事件
+                bus.$on('on-message', function(msg){
+                    _this.message = msg;
+                })
+            }
+        })
+
+        //父链 -> this.$parent
+        Vue.component('component-b', {
+            template: '<button @click="handleEvent2">通过父链直接修改数据</button>',
+            methods: {
+                handleEvent2: function() {
+                    // 访问父链后, 可以做任何操作, 比如直接修改数据
+                    this.$parent.message2 = '来自组件component-b内容';
+                }
+            }
+        });
+
+        var app2 = new Vue({
+            el: '#app2',
+            data: {
+                message2: ''
+            }
+        });
+
+        // 子链 -> this.$refs
+        Vue.component('component-c', {
+            template: '<div>子组件</div>',
+            data: function() {
+                return {
+                    message3: '子组件内容'
+                }
+            }
+        });
+
+        // $ref只在组件渲染完成后才填充,并且它是非响应的。它仅仅作为一个直接访问子组件的应急方案
+        // 避免在模版/计算使用
+        var app3 = new Vue({
+            el: '#app3',
+            methods: {
+                handleRef: function() {
+                    // 通过$refs来访问指定的实例
+                    var msg = this.$refs.comA.message3;
+                    console.log(msg);
+                }
+
+            }
+        });
+    
+    
+    </script>
+</body>
+</html>
